@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ALSA JamesDSP</title>
+  <link rel="stylesheet" href="{{url_for('static', filename = 'jquery-ui.min.css')}}" />
+  <link rel="stylesheet" href="{{url_for('static', filename = 'simpleGrid.css')}}"  />
+
+<style>
+  #TONE_EQ > span {
+    height:120px;  margin:8px;
+    display: inline-block;
+  }
+  </style>
+  <script src="{{url_for('static', filename = 'jquery.min.js')}}" type="text/javascript"></script>
+  <script src="{{url_for('static', filename = 'jquery-ui.min.js')}}" type="text/javascript"></script>
+  <script src="{{url_for('static', filename = 'chart.min.js')}}"></script>
+ </head>
+<body>
+
+<div class="grid grid-pad">
+  <div>
+    <input type="checkbox" name="FX_ENABLE" id="FX_ENABLE" onchange="jdsp_feature_enable(this)">
+    <label for="FX_ENABLE">ALSA JamesDSP FX Enable</label>
+    <button class="ui-button ui-widget ui-corner-all" style="position: relative; left: 10px;"  onclick="jdsp_refresh_config(this)">Refresh</button>
+  </div>
+  <hr>
+
+  <div class="col-1-2">
+    <div class="grid-pad">
+
+      <div class="col-1-1" style="padding: 1%;">
+        <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+          <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+            <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+            Master/Limiter
+          </div>
+  
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Limiter threshold (dB)</span>
+              <div id="MASTER_LIMTHRESHOLD" style="width:260px; margin: 1% 0 1% 2.5%;">
+                <span id="MASTER_LIMTHRESHOLD_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+              </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Limiter release (ms)</span>
+            <div id="MASTER_LIMRELEASE" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="MASTER_LIMRELEASE_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+  
+      <div class="col-1-1" style="padding: 1%;">
+      <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+        <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+          <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+          <input type="checkbox" name="TUBE_ENABLE" id="TUBE_ENABLE" onchange="jdsp_feature_enable(this)">
+          Analog Modeling
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Tube Drive/Strength</span>
+          <div id="TUBE_DRIVE" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="TUBE_DRIVE_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+      </div>
+      </div>
+  
+      <div class="col-1-1" style="padding: 1%;">
+      <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+        <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+          <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+          <input type="checkbox" name="BASS_ENABLE" id="BASS_ENABLE" onchange="jdsp_feature_enable(this)">
+          Dynamic Bass Boost 
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Boost Strength</span>
+          <div id="BASS_MODE" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="BASS_MODE_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Cutoff Freq (Hz)</span>
+          <div id="BASS_FREQ" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="BASS_FREQ_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Filtertype [Linear phase 2049/4097 lowpass filter]</span>
+          <div id="BASS_FILTERTYPE" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="BASS_FILTERTYPE_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="col-1-1" style="padding: 1%;">
+        <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+          <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+            <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+            <input type="checkbox" name="BS2B_ENABLE" id="BS2B_ENABLE" onchange="jdsp_feature_enable(this)">
+            BS2B 
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Cutoff Frequency (Hz)</span>
+            <div id="BS2B_FCUT" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="BS2B_FCUT_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Crossfeed Level (10=1db)</span>
+            <div id="BS2B_FEED" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="BS2B_FEED_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-1-1" style="padding: 1%;">
+        <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+          <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+            <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+            <input type="checkbox" name="COMPRESSOR_ENABLE" id="COMPRESSOR_ENABLE" onchange="jdsp_feature_enable(this)">
+            Dynamic Range Compressor
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Pre-gain (dB)</span>
+            <div id="COMPRESSOR_PREGAIN" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="COMPRESSOR_PREGAIN_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Threshold (dB)</span>
+            <div id="COMPRESSOR_THRESHOLD" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="COMPRESSOR_THRESHOLD_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Knee (dB)</span>
+            <div id="COMPRESSOR_KNEE" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="COMPRESSOR_KNEE_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Ratio (1:xx)</span>
+            <div id="COMPRESSOR_RATIO" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="COMPRESSOR_RATIO_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Attack (ms)</span>
+            <div id="COMPRESSOR_ATTACK" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="COMPRESSOR_ATTACK_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Release (ms)</span>
+            <div id="COMPRESSOR_RELEASE" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="COMPRESSOR_RELEASE_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-1-1" style="padding: 1%;">
+        <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+          <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+            <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+            <input type="checkbox" name="TONE_ENABLE" id="TONE_ENABLE" onchange="jdsp_eq_enable(this)">
+            Equalizer (-12/12dB)
+          </div>
+    
+    
+          <div style="font-size: 0.6vw;">
+               <span style="padding-left: 1%; font-size: 0.6vw;">15-Band EQ</span>
+               <div id="TONE_EQ">
+                <span id="eq25">0</span>
+                <span id="eq40">0</span>
+                <span id="eq63">0</span>
+                <span id="eq100">0</span>
+                <span id="eq160">0</span>
+                <span id="eq250">0</span>
+                <span id="eq400">0</span>
+                <span id="eq630">0</span>
+                <span id="eq1k">0</span>
+                <span id="eq2k">0</span>
+                <span id="eq3k">0</span>
+                <span id="eq4k">0</span>
+                <span id="eq6k">0</span>
+                <span id="eq10k">0</span>
+                <span id="eq16k">0</span>
+              </div>
+          </div>
+    
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Equalizer Filter (Minimum/Linear Phase)</span>
+            <div id="TONE_FILTERTYPE" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="TONE_FILTERTYPE_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <canvas id="eqChart" width="200" height="67"></canvas>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-1-2">
+    <div class="grid-pad">
+      <div class="col-1-1" style="padding: 1%;">
+        <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+          <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+            <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+            <input type="checkbox" name="STEREOWIDE_ENABLE" id="STEREOWIDE_ENABLE" onchange="jdsp_feature_enable(this)">
+            Stereo Widener
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">M Coeff</span>
+            <div id="STEREOWIDE_MCOEFF" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="STEREOWIDE_MCOEFF_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">S Coeff</span>
+            <div id="STEREOWIDE_SCOEFF" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="STEREOWIDE_SCOEFF_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-1-1" style="padding: 1%;">
+      <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+        <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+          <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+          <input type="checkbox" name="HEADSET_ENABLE" id="HEADSET_ENABLE" onchange="jdsp_feature_enable(this)">
+          Reverberation
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Oversample Factor</span>
+          <div id="HEADSET_OSF" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_OSF_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Early Reflection Amount</span>
+          <div id="HEADSET_REFLECTION_AMOUNT" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_REFLECTION_AMOUNT_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Final Wet (dB)</span>
+          <div id="HEADSET_FINALWET" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_FINALWET_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Final Dry (dB)</span>
+          <div id="HEADSET_FINALDRY" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_FINALDRY_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Early Reflection Factor </span>
+          <div id="HEADSET_REFLECTION_FACTOR" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_REFLECTION_FACTOR_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Early Reflection Width</span>
+          <div id="HEADSET_REFLECTION_WIDTH" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_REFLECTION_WIDTH_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Reverb Width L/R</span>
+          <div id="HEADSET_WIDTH" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_WIDTH_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Reverb Wetness (dB)</span>
+          <div id="HEADSET_WET" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_WET_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">LFO Wander</span>
+          <div id="HEADSET_LFO_WANDER" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_LFO_WANDER_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Bass Boost</span>
+          <div id="HEADSET_BASSBOOST" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_BASSBOOST_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">LFO Spin Amount</span>
+          <div id="HEADSET_LFO_SPIN" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_LFO_SPIN_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Time Decay</span>
+          <div id="HEADSET_DECAY" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_DECAY_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Delay (ms)</span>
+          <div id="HEADSET_DELAY" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_DELAY_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Lowpass Input Cutoff (Hz))</span>
+          <div id="HEADSET_LPF_INPUT" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_LPF_INPUT_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Lowpass Bass Cutoff (Hz)</span>
+          <div id="HEADSET_LPF_BASS" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_LPF_BASS_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Lowpass Damp Cutoff (Hz)</span>
+          <div id="HEADSET_LPF_DAMP" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_LPF_DAMP_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+        <div>
+          <span style="padding-left: 1%; font-size: 0.6vw;">Lowpass Output Cutoff (Hz)</span>
+          <div id="HEADSET_LPF_OUTPUT" style="width:260px; margin: 1% 0 2% 2.5%;">
+            <span id="HEADSET_LPF_OUTPUT_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="col-1-1" style="padding: 1%;">
+        <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+          <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+            <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+            <input type="checkbox" name="DDC_ENABLE" id="DDC_ENABLE" onchange="jdsp_feature_enable(this)">
+            Enable DDC
+          </div>
+    
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">DDC File</span>
+            <div>
+            <select name="DDC_COEFFS" id="DDC_COEFFS" onchange="jdsp_ddc_select(this)">
+              <option></option>
+            </select>
+            </div>
+          </div>
+    
+        </div>
+      </div>
+    
+      <div class="col-1-1" style="padding: 1%;">
+        <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+          <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+            <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+            <input type="checkbox" name="CONVOLVER_ENABLE" id="CONVOLVER_ENABLE" onchange="jdsp_feature_enable(this)">
+            Enable Convolver
+          </div>
+    
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Convolver File</span>
+            <div>
+            <select name="CONVOLVER_FILE" id="CONVOLVER_FILE" onchange="jdsp_convolver_select(this)"">
+              <option></option>
+            </select>
+            </div>
+          </div>
+    
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Convolver Gain (dB)</span>
+            <div id="CONVOLVER_GAIN" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="CONVOLVER_GAIN_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <!-- div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">C0 Benchmark</span>
+            <div class="ui-widget" style="width:260px;">
+                <input id="CONVOLVER_BENCH_C0">
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">C1 Benchmark</span>
+            <div class="ui-widget" style="width:260px; ">
+                <input id="CONVOLVER_BENCH_C1">
+            </div>
+          </div -->
+    
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">C0 Benchmark</span>
+            <div id="CONVOLVER_BENCH_C0" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="CONVOLVER_BENCH_C0_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">C1 Benchmark</span>
+            <div id="CONVOLVER_BENCH_C1" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="CONVOLVER_BENCH_C1_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+    
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="grid grid-pad">
+</div>
+<script src="{{url_for('static', filename = 'jamesdsp.js')}}" type="text/javascript"></script>
+</body>
+</html>
