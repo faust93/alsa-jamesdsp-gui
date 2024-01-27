@@ -129,7 +129,51 @@ function jdsp_convolver_select(e) {
     }
 }
 
+function jdsp_iirfilter_select(e) {
+    console.dir("IIR_FILTER: " + e.value);
+    ws.send("IIR_FILTER=" + e.value);
+    ws.send("COMMIT");
+}
+
 function jdsp_ui_init() {
+
+    $( "#IIR_FREQ" ).slider({
+        change: jdsp_prop_change,
+        slide: function( event, ui ) {
+            document.getElementById('IIR_FREQ_V').innerText = ui.value;
+        },
+        value: 400,
+        orientation: "horizontal",
+        range: "min",
+        min: 0,
+        max: 40000,
+        animate: true
+    });
+    $( "#IIR_GAIN" ).slider({
+        change: jdsp_prop_change,
+        slide: function( event, ui ) {
+            document.getElementById('IIR_GAIN_V').innerText = ui.value;
+        },
+        value: 10,
+        orientation: "horizontal",
+        range: "min",
+        min: -100,
+        max: 100,
+        animate: true
+    });
+    $( "#IIR_QFACT" ).slider({
+        change: jdsp_prop_change,
+        slide: function( event, ui ) {
+            document.getElementById('IIR_QFACT_V').innerText = ui.value;
+        },
+        value: 0.707,
+        orientation: "horizontal",
+        range: "min",
+        min: 0.0,
+        max: 4.0,
+        step: 0.1,
+        animate: true
+    });
 
     $( "#MASTER_LIMTHRESHOLD" ).slider({
         change: jdsp_prop_change,
@@ -611,6 +655,34 @@ function jdsp_ui_init() {
 
 function jdsp_update_controls(data) {
     var config = JSON.parse(data);
+    if("IIR_ENABLE" in config) {
+        var val = false;
+        if(config.IIR_ENABLE == 1)
+            val = true;
+        $("#IIR_ENABLE").attr("checked", val);
+    }
+    if("IIR_FREQ" in config) {
+        $( "#IIR_FREQ" ).slider({
+            value: config.IIR_FREQ
+          });
+          document.getElementById('IIR_FREQ_V').innerText = config.IIR_FREQ;
+    }
+    if("IIR_GAIN" in config) {
+        $( "#IIR_GAIN" ).slider({
+            value: config.IIR_GAIN
+          });
+        document.getElementById('IIR_GAIN_V').innerText = config.IIR_GAIN;
+    }
+    if("IIR_QFACT" in config) {
+        $( "#IIR_QFACT" ).slider({
+            value: config.IIR_QFACT
+          });
+        document.getElementById('IIR_QFACT_V').innerText = config.IIR_QFACT;
+    }
+    if("IIR_FILTER" in config) {
+        console.log("IIR_FILTER " + config.IIR_FILTER);
+        $("#IIR_FILTER").val(config.IIR_FILTER);
+    }
     if("FX_ENABLE" in config) {
         var val = false;
         if(config.FX_ENABLE == 1)

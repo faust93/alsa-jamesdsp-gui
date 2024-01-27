@@ -169,6 +169,53 @@
         <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
           <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
             <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+            <input type="checkbox" name="IIR_ENABLE" id="IIR_ENABLE" onchange="jdsp_feature_enable(this)">
+            IIR Filter
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">IIR Filter Type</span>
+            <div>
+            <select name="IIR_FILTER" id="IIR_FILTER" onchange="jdsp_iirfilter_select(this)"">
+              <option value="0">Resonant Lowpass</option>
+              <option value="1">Resonant Highpass</option>
+              <option value="2">Bandpass (CSG)</option>
+              <option value="3">Bandpass (ZPG)</option>
+              <option value="4">Allpass</option>
+              <option value="5">Notch</option>
+              <option value="6">RIAA Tape/Vynil de-emphasis</option>
+              <option value="7">Parametric EQ single band</option>
+              <option value="8">Bass Boost</option>
+              <option value="9">Low shelf</option>
+              <option value="10">CD De-emphasis</option>
+              <option value="11">High shelf</option>
+            </select>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Frequency (dB)</span>
+            <div id="IIR_FREQ" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="IIR_FREQ_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Gain</span>
+            <div id="IIR_GAIN" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="IIR_GAIN_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">QFactor</span>
+            <div id="IIR_QFACT" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="IIR_QFACT_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-1-1" style="padding: 1%;">
+        <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+          <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+            <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
             <input type="checkbox" name="TONE_ENABLE" id="TONE_ENABLE" onchange="jdsp_eq_enable(this)">
             Equalizer (-12/12dB)
           </div>
