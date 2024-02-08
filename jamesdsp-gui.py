@@ -54,6 +54,10 @@ def ctl(sock):
             jdsp_command("CONVOLVER_FILE=" + convolver_dir + "/" + f)
             time.sleep(0.10);
         else:
+            if "COMMIT" not in data:
+                k, v = data.split("=")
+                jdsp_config[k] = v.rstrip()
+                jdsp_gui_save_config()
             jdsp_command(data)
             time.sleep(0.10);
 
@@ -66,6 +70,12 @@ def jdsp_command(cmd):
     except OSError as ex:
         if ex.errno == errno.ENXIO:
             pass
+
+def jdsp_gui_save_config():
+    with open(cfg_file, "w") as f:
+        for k, v in jdsp_config.items():
+            if k != "type":
+                f.write(k + "=" + v + "\n")
 
 def jdsp_gui_update_config():
     with open(cfg_file, "r") as f:
