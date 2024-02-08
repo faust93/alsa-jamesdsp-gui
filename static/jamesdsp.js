@@ -45,6 +45,7 @@ function jdsp_eq_enable(e) {
     else
         val = "0";
     console.log(e.id +"="+val);
+    ws.send(e.id +"="+val);
     if(e.checked) {
         var eq = "";
         eq += $( "#eq25" ).slider( "option", "value" ) + ";";
@@ -64,7 +65,6 @@ function jdsp_eq_enable(e) {
         eq += $( "#eq16k" ).slider( "option", "value" );
         ws.send("TONE_EQ=" + eq);
     }
-    ws.send(e.id +"="+val);
     ws.send("COMMIT");
 }
 
@@ -91,6 +91,20 @@ function jdsp_eq_change(e, ui) {
     ws.send("TONE_EQ=" + eq);
     ws.send("COMMIT");
     console.log("TONE_EQ=" + eq);
+}
+
+function jdsp_eq_filter_change(e) {
+    if(!gui_inited)
+        return;
+    ws.send("TONE_FILTERTYPE=" + $( "#TONE_FILTERTYPE" ).slider( "option", "value" ));
+    tone_onoff = $("#TONE_ENABLE").is(":checked");
+    if(tone_onoff) {
+        ws.send("TONE_ENABLE=0");
+        ws.send("COMMIT");
+        ws.send("TONE_ENABLE=1");
+        ws.send("COMMIT");
+        jdsp_eq_change(null,null);
+    }
 }
 
 function jdsp_bass_prop(e, ui) {
@@ -640,7 +654,7 @@ function jdsp_ui_init() {
         });
       });
       $( "#TONE_FILTERTYPE" ).slider({
-        change: jdsp_prop_change,
+        change: jdsp_eq_filter_change,
         slide: function( event, ui ) {
             document.getElementById('TONE_FILTERTYPE_V').innerText = ui.value;
         },
