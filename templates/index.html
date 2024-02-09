@@ -284,6 +284,34 @@
       </div>
 
       <div class="col-1-1" style="padding: 1%;">
+        <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+          <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+            <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+            <input type="checkbox" name="FSURROUND_ENABLE" id="FSURROUND_ENABLE" onchange="jdsp_feature_enable(this)">
+            Field Surround
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Depth/Strength</span>
+            <div id="FSURROUND_DEPTH" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="FSURROUND_DEPTH_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Widen</span>
+            <div id="FSURROUND_WIDE" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="FSURROUND_WIDE_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Mid Image</span>
+            <div id="FSURROUND_MID" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="FSURROUND_MID_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">123</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-1-1" style="padding: 1%;">
       <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
         <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
           <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
@@ -393,6 +421,28 @@
           </div>
         </div>
       </div>
+      </div>
+
+      <div class="col-1-1" style="padding: 1%;">
+        <div class="content ui-corner-all ui-widget-content" style="padding: 1%;">
+          <div class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">
+            <span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>
+            <input type="checkbox" name="SE_ENABLE" id="SE_ENABLE" onchange="jdsp_feature_enable(this)">
+            Spectrum Extender
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Exciter Level</span>
+            <div id="SE_EXCITER" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="SE_EXCITER_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">0.0</span>
+            </div>
+          </div>
+          <div>
+            <span style="padding-left: 1%; font-size: 0.6vw;">Reference Freq</span>
+            <div id="SE_REFREQ" style="width:260px; margin: 1% 0 2% 2.5%;">
+              <span id="SE_REFREQ_V" style="position: relative; top: -5px; left: 105%;  font-size: 0.6vw;">7600</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="col-1-1" style="padding: 1%;">

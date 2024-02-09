@@ -665,6 +665,69 @@ function jdsp_ui_init() {
         max: 1,
         animate: true
     });
+    $( "#SE_EXCITER" ).slider({
+        change: jdsp_prop_change,
+        slide: function( event, ui ) {
+            document.getElementById('SE_EXCITER_V').innerText = ui.value;
+        },
+        value: 0.0,
+        orientation: "horizontal",
+        range: "min",
+        min: 0.0,
+        max: 50.0,
+        step: 0.000001,
+        animate: true
+    });
+    $( "#SE_REFREQ" ).slider({
+        change: jdsp_prop_change,
+        slide: function( event, ui ) {
+            document.getElementById('SE_REFREQ_V').innerText = ui.value;
+        },
+        value: 7600,
+        orientation: "horizontal",
+        range: "min",
+        min: 0,
+        max: 24000,
+        animate: true
+    });
+    $( "#FSURROUND_DEPTH" ).slider({
+        change: jdsp_prop_change,
+        slide: function( event, ui ) {
+            document.getElementById('FSURROUND_DEPTH_V').innerText = ui.value;
+        },
+        value: 1,
+        orientation: "horizontal",
+        range: "min",
+        min: 0,
+        max: 1000,
+        animate: true
+    });
+    $( "#FSURROUND_WIDE" ).slider({
+        change: jdsp_prop_change,
+        slide: function( event, ui ) {
+            document.getElementById('FSURROUND_WIDE_V').innerText = ui.value;
+        },
+        value: 0.0,
+        orientation: "horizontal",
+        range: "min",
+        min: 0.0,
+        max: 10.0,
+        step: 0.000001,
+        animate: true
+    });
+    $( "#FSURROUND_MID" ).slider({
+        change: jdsp_prop_change,
+        slide: function( event, ui ) {
+            document.getElementById('FSURROUND_MID_V').innerText = ui.value;
+        },
+        value: 0.0,
+        orientation: "horizontal",
+        range: "min",
+        min: 0.0,
+        max: 10.0,
+        step: 0.000001,
+        animate: true
+    });
 }
 
 function jdsp_update_controls(data) {
@@ -833,7 +896,48 @@ function jdsp_update_controls(data) {
           });
         document.getElementById('BS2B_FEED_V').innerText = config.BS2B_FEED;
     }
-
+    if("SE_ENABLE" in config) {
+        var val = false;
+        if(config.SE_ENABLE == 1)
+            val = true;
+        $("#SE_ENABLE").attr("checked", val);
+    }
+    if("SE_EXCITER" in config) {
+        $( "#SE_EXCITER" ).slider({
+            value: config.SE_EXCITER
+          });
+        document.getElementById('SE_EXCITER_V').innerText = config.SE_EXCITER;
+    }
+    if("SE_REFREQ" in config) {
+        $( "#SE_REFREQ" ).slider({
+            value: config.SE_REFREQ
+          });
+        document.getElementById('SE_REFREQ_V').innerText = config.SE_REFREQ;
+    }
+    if("FSURROUND_ENABLE" in config) {
+        var val = false;
+        if(config.FSURROUND_ENABLE == 1)
+            val = true;
+        $("#FSURROUND_ENABLE").attr("checked", val);
+    }
+    if("FSURROUND_DEPTH" in config) {
+        $( "#FSURROUND_DEPTH" ).slider({
+            value: config.FSURROUND_DEPTH
+          });
+        document.getElementById('FSURROUND_DEPTH_V').innerText = config.FSURROUND_DEPTH;
+    }
+    if("FSURROUND_WIDE" in config) {
+        $( "#FSURROUND_WIDE" ).slider({
+            value: config.FSURROUND_WIDE
+          });
+        document.getElementById('FSURROUND_WIDE_V').innerText = config.FSURROUND_WIDE;
+    }
+    if("FSURROUND_MID" in config) {
+        $( "#FSURROUND_MID" ).slider({
+            value: config.FSURROUND_MID
+          });
+        document.getElementById('FSURROUND_MID_V').innerText = config.FSURROUND_MID;
+    }
     if("HEADSET_ENABLE" in config) {
         var val = false;
         if(config.HEADSET_ENABLE == 1)
